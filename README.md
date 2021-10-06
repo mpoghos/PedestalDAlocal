@@ -1,7 +1,7 @@
 # PedestalDAlocal
 usage
-c++ analPedFile.C
-./anal.sh runNumber
+- c++ analPedFile.C
+- ./anal.sh runNumber
 
 OR
 
