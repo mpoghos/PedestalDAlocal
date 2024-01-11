@@ -25,7 +25,8 @@
 
 using namespace o2::emcal;
 
-const int debug = -2;
+const int debug = -3;
+const int NmaxTFids = 5000;
 
 std::array<TProfile2D *, 20> mHistoHG;
 std::array<TProfile2D *, 20> mHistoLG;
@@ -101,7 +102,7 @@ void AnalData2textFile(int run_number, int iDet = 0) {
         new o2::emcal::MappingHandler);
   }
   if (!mMapper) {
-    LOG(ERROR) << "Failed to initialize mapper";
+    LOG(error) << "Failed to initialize mapper";
   }
 
   AnalRawData();
@@ -155,9 +156,9 @@ void AnalRawData() {
   //  reader.addFile("data/readoutSMAC9_pedestal.raw");
   //  reader.addFile("data/readoutEMCAL.raw");
   if (iDET == 0) {
-    reader.addFile(Form("data/readoutEMCAL_%d.raw", runNumber));
+    reader.addFile(Form("data/readoutEMCAL_PED_%d.raw", runNumber));
   } else {
-    reader.addFile(Form("data/readoutDCAL_%d.raw", runNumber));
+    reader.addFile(Form("data/readoutDCAL_PED_%d.raw", runNumber));
   }
   reader.init();
 
@@ -168,7 +169,7 @@ void AnalRawData() {
     o2::emcal::MappingHandler);
     }
     if (!mMapper) {
-      LOG(ERROR) << "Failed to initialize mapper";
+      LOG(error) << "Failed to initialize mapper";
     }
   */
 
@@ -178,6 +179,13 @@ void AnalRawData() {
       std::cerr << "nothing left to read after " << tfID << " TFs read";
       break;
     }
+
+if((NmaxTFids > 0 ) && (tfID > NmaxTFids) )
+{
+std::cout<<"--- NmaxTFids reached = " << tfID << std::endl;
+break;
+}
+
     std::vector<char> dataBuffer; // where to put extracted data
     for (int il = 0; il < reader.getNLinks(); il++) {
       auto &link = reader.getLink(il);
@@ -194,6 +202,8 @@ void AnalRawData() {
       o2::emcal::RawReaderMemory parser(dataBuffer);
 
       while (parser.hasNext()) {
+        if (debug > 1)
+          std::cout << "calling parser.hasNext()\n";
         parser.next();
 
         if (o2::raw::RDHUtils::getFEEID(parser.getRawHeader()) >= 40)
@@ -210,7 +220,7 @@ void AnalRawData() {
           continue;
 
         if (debug > 1) {
-          std::cout << "FEEID: " << feeID << std::endl;
+          std::cout << "FEEID: " << feeID << ": ";
           std::cout << "next page: (TriggerBits=" << triggerbits << ",  ";
           std::cout << "Orbit=" << triggerOrbit << ", BC=" << triggerBC << ")"
                     << std::endl;
@@ -265,8 +275,8 @@ void AnalRawData() {
           // if(!(iSM==12 && col == 0 && row == 0))
           //  continue;
 
-          if (debug > 1)
-            std::cout << "SM" << iSM << "/FEC" << chan.getFECIndex()
+          if (debug > 2)
+            std::cout << "SM" << iSM << "/FEC" << ((feeID%2)*20 +  10 * chan.getBranchIndex() + chan.getFECIndex() )
                       << "/HW:" << chan.getHardwareAddress() << "/CF:" << chType
                       << " (" << setw(2) << col << "," << setw(2) << row
                       << "): ";
@@ -275,7 +285,7 @@ void AnalRawData() {
 
           for (auto &bunch : chan.getBunches()) {
             for (auto const e : bunch.getADC()) {
-              if (debug > 1)
+              if (debug > 2)
                 std::cout << setw(4) << e << " ";
               nsamples++;
 
@@ -290,7 +300,7 @@ void AnalRawData() {
                   mHistoLEDHG[iSM]->Fill(col, e);
               }
             }
-            if (debug > 1)
+            if (debug > 2)
               std::cout << std::endl;
           }
         }
@@ -301,6 +311,8 @@ void AnalRawData() {
     }
     reader.setNextTFToRead(++tfID);
   }
+  if (debug > 1)
+    std::cout << "end of AnalRawData() \n";
 }
 
 /*
@@ -312,7 +324,7 @@ void WriteToCCDB() {
   const std::string uri = "http://ccdb-test.cern.ch:8080";
   api.init(uri); // or http://localhost:8080 for a local installation
   if (!api.isHostReachable()) {
-    LOG(WARNING) << "Host " << uri << " is not reacheable, abandoning the test";
+    LOG(warning) << "Host " << uri << " is not reacheable, abandoning the test";
     return;
   }
 
