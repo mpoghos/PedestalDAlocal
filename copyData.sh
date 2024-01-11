@@ -1,2 +1,2 @@
-scp poghos@lxplus.cern.ch:/eos/home-p/poghos/P2_data/PedRuns/readoutEMCAL_$1.raw data/.
-scp poghos@lxplus.cern.ch:/eos/home-p/poghos/P2_data/PedRuns/readoutDCAL_$1.raw data/.
+scp emc@alio2-cr1-flp146:/home/flp/data/readoutEMCAL_PED.raw data/readoutEMCAL_PED_$1.raw
+scp emc@alio2-cr1-flp147:/home/flp/data/readoutDCAL_PED.raw data/readoutDCAL_PED_$1.raw
