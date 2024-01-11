@@ -3,6 +3,8 @@
 #include <iostream> // std::cout
 //#include <fstream>      // std::ofstream
 #include <string>
+#include<cstdlib>
+#include <stdexcept>
 
 //#include <bits/stdc++.h>
 #include <iostream>
@@ -20,7 +22,7 @@ const int SRUAltroWrite = 0x40000000;
 std::string baseDir = "pedestals_fromdata";
 
 // void CreateDir(std::string name);
-int debug = 0;
+int debug = 0;//2;//0;
 
 bool CreateDir(std::string name) {
 
