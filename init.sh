@@ -1,5 +1,5 @@
 #!/bin/bash 
 
-mkdir data
-mkdir pedestalsRun3
+#mkdir data
+#mkdir pedestalsRun3
 c++ analPedFile.C

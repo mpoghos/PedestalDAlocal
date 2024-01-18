@@ -4,4 +4,6 @@
         "AnalData2textFile.C": "cpp",
         "analPedFile.C": "cpp"
     }
+    "editor.formatOnSave": true,
+    "clang-format.executable": "/home/poghos/alice2/sw/ubuntu2204_x86-64/Clang/latest/bin-safe/clang-format"
 }

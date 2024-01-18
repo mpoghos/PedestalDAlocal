@@ -1,12 +1,12 @@
 // ifstream constructor.
 #include <fstream>  // std::ifstream
 #include <iostream> // std::cout
-//#include <fstream>      // std::ofstream
-#include <string>
-#include<cstdlib>
+// #include <fstream>      // std::ofstream
+#include <cstdlib>
 #include <stdexcept>
+#include <string>
 
-//#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
 #include <iostream>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -22,7 +22,7 @@ const int SRUAltroWrite = 0x40000000;
 std::string baseDir = "pedestals_fromdata";
 
 // void CreateDir(std::string name);
-int debug = 0;//2;//0;
+int debug = 0; // 2;//0;
 
 bool CreateDir(std::string name) {
 
@@ -105,6 +105,8 @@ int main(int argc, char *argv[]) {
 
   char scriptLine[200];
 
+  bool isGoodLine = true;
+
   while (ifs >> val) {
 
     if ((val >> 30) == (FECheaderCode >> 30)) {
@@ -113,12 +115,18 @@ int main(int argc, char *argv[]) {
       int iSide_tmp = (val >> 8) & 0x1;
       int iDTC_tmp = val & 0xFF;
 
+      isGoodLine = true;
+
       if (iDET == 0) {
-        if (iSector_tmp > 5)
+        if (iSector_tmp > 5) {
+          isGoodLine = false;
           continue;
+        }
       } else {
-        if (iSector_tmp < 9)
+        if (iSector_tmp < 9) {
+          isGoodLine = false;
           continue;
+        }
       }
 
       if ((iSector != iSector_tmp) || (iSide != iSide_tmp)) {
@@ -242,7 +250,7 @@ int main(int argc, char *argv[]) {
     //	std::cout << scriptLine << std::endl;
     //}
 
-    if ((val >> 30) == (FEClineCode >> 30)) {
+    if ((val >> 30) == (FEClineCode >> 30) && isGoodLine) {
       //	std::cout << "line   : ";
 
       int ped = val & 0xFFF;

@@ -10,8 +10,8 @@ fi
 
 
 runNumber=$1
-root -b -q AnalData2textFile.C\($runNumber,0\)
-root -b -q AnalData2textFile.C\($runNumber,1\)
+#root -b -q AnalData2textFile.C\($runNumber,0\)
+#root -b -q AnalData2textFile.C\($runNumber,1\)
 ./a.out $runNumber 0
 ./a.out $runNumber 1
 
