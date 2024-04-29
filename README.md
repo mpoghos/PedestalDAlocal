@@ -14,3 +14,6 @@ OR
 4. ./a.out runNumber 0 -- for EMCAL
 5. ./a.out runNumber 1 -- for DCAL
 
+----
+analPedFile_EMC.C  assumes a merged input from EMCAL/DCAL data and is meant to be used on the DCS LN.
+
